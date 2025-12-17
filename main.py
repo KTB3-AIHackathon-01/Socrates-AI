@@ -1,10 +1,16 @@
-from fastapi import FastAPI, HTTPException
 import os, sys, uvicorn
-from utils.response import BaseResponse, DataResponse
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from ws.manager import manager
+from ws.handlers import handle_start_session, handle_user_response, handle_close_session
+from ws.schemas import ClientMessage
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from typing import Optional
-from graph.graph import run_learning_session
+from uuid import uuid4
+import json
+
 # 경로 설정
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -12,59 +18,74 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 load_dotenv()
 
 app = FastAPI()
+# CORS 설정 (외부 접근 허용)
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins=["*"],
+  allow_credentials=True,
+  allow_methods=["*"],
+  allow_headers=["*"],
+)
 
-# 요청 스키마
-class StartSessionRequest(BaseModel):
-  topic: str
+@app.websocket("/ws/chat/{client_id}")
+async def websocket_endpoint(websocket: WebSocket, client_id: str):
+  """
+  WebSocket 채팅 엔드포인트
+  
+  Usage:
+  - 연결: ws://localhost:8000/ws/chat/{client_id}
+  - 세션 시작: {"action": "start", "topic": "Python"}
+  - 답변 제출: {"action": "respond", "session_id": "...", "answer": "..."}
+  - 세션 종료: {"action": "close", "session_id": "..."}
+  """
+  session_id = None
+  
+  try:
+    # 초기 연결 수락
+    await websocket.accept()
+    print(f"🔗 Client {client_id} connected")
 
-class UserResponseRequest(BaseModel):
-  session_id: str
-  response: str
+    while True:
+      # 클라이언트 메시지 수신
+      data = await websocket.receive_text()
+      message = ClientMessage(**json.loads(data))
+
+      if message.action == "start":
+        # 새 세션 시작
+        session_id = str(uuid4())
+        # 이 부분에서 세션 id를 DB에 저장
+        await manager.connect(session_id, websocket)
+        print(f"🎓 Starting session: {session_id}")
+        await handle_start_session(session_id, message.topic)
+          
+      elif message.action == "respond":
+        # 사용자 응답 처리
+        if message.session_id:
+          session_id = message.session_id
+          await handle_user_response(session_id, message.answer)
+        else:
+          await manager.send_error("", "SESSION_ERROR", "Session ID required")
+              
+      elif message.action == "close":
+        # 세션 종료
+        if message.session_id:
+          await handle_close_session(message.session_id)
+        break
+              
+  except WebSocketDisconnect:
+    print(f"Client {client_id} disconnected")
+    if session_id:
+      await manager.disconnect(session_id)
+          
+  except Exception as e:
+    print(f"Error: {e}")
+    if session_id:
+      await manager.send_error(session_id, "INTERNAL_ERROR", str(e))
 
 @app.get("/")
 async def root():
-  return BaseResponse(success=True, message="Welcome to Socratic Learning API")
+  return JSONResponse(content={"success": True, "message": "Welcome to Socratic Learning API"})
 
-@app.post("/session/start")
-async def start_session(request: StartSessionRequest):
-    """새로운 학습 세션 시작"""
-    try:
-        result = run_learning_session(request.topic)
-        return DataResponse(
-            success=True,
-            data=result,
-            message="학습 세션을 시작했습니다."
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/session/response")
-async def submit_response(request: UserResponseRequest):
-    """사용자 응답 제출"""
-    try:
-        # TODO: 세션 상태 관리 및 응답 처리
-        return DataResponse(
-            success=True,
-            data={"message": "응답을 처리했습니다."},
-            message="성공"
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.get("/session/{session_id}")
-async def get_session(session_id: str):
-    """세션 조회"""
-    try:
-        # TODO: DB에서 세션 정보 조회
-        return DataResponse(
-            success=True,
-            data={"session_id": session_id},
-            message="세션 정보를 조회했습니다."
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-  uvicorn.run("main:app", reload=True)
+  uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
