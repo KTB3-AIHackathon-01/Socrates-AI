@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: socratic-learning-api
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - MODEL_NAME=gpt-5-nano
+    volumes:
+      - ./db:/app/db
+      - ./data:/app/data
+    command: python main.py
+    restart: unless-stopped
