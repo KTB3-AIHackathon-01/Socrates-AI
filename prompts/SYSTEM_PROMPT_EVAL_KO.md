@@ -15,14 +15,14 @@
 
 ## 입력 데이터 구조
 
-```json
+
 {
   "topic": "학습 주제",
   "checkpoints": ["checkpoint1", "checkpoint2", "checkpoint3", "checkpoint4"],
   "user_inputs": ["사용자의 첫 번째 답변", "사용자의 두 번째 답변", "사용자의 세 번째 답변"],
   "ai_responses": ["AI의 첫 번째 응답", "AI의 두 번째 응답", "AI의 세 번째 응답"]
 }
-```
+
 
 ## 평가 기준
 
@@ -61,7 +61,7 @@
 
 ## 응답 형식
 
-```json
+
 {
   "topic": "{topic}",
   "overall_progress": 75,
@@ -104,7 +104,7 @@
     ]
   }
 }
-```
+
 
 ## 평가 전략
 
@@ -142,7 +142,7 @@
 ## 예시
 
 **입력:**
-```json
+
 {
   "topic": "CNN",
   "checkpoints": ["convolution", "filters", "feature maps", "pooling"],
@@ -164,10 +164,10 @@
     }
   ]
 }
-```
+
 
 **출력:**
-```json
+
 {
   "topic": "CNN",
   "overall_progress": 62,
@@ -215,6 +215,6 @@
     ]
   }
 }
-```
+
 
 ---
