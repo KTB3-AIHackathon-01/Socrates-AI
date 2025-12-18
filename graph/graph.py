@@ -93,6 +93,27 @@ def load_eval_prompt(topic: str) -> str:
 
 
 # 채팅 시작
+def extract_json_from_markdown(text: str) -> str:
+  """마크다운 코드 블록에서 JSON 추출"""
+  import re
+
+  # ```json ... ``` 패턴 찾기
+  pattern = r'```json\s*(.*?)\s*```'
+  match = re.search(pattern, text, re.DOTALL)
+
+  if match:
+    return match.group(1).strip()
+
+  # ``` ... ``` 패턴 찾기 (json 키워드 없이)
+  pattern = r'```\s*(.*?)\s*```'
+  match = re.search(pattern, text, re.DOTALL)
+
+  if match:
+    return match.group(1).strip()
+
+  # 마크다운 블록이 없으면 원본 반환
+  return text.strip()
+
 def _chat_init(state: ChatState) -> ChatState:
   """시스템 프롬프트를 포함한 LLM 호출"""
   import json
@@ -104,9 +125,9 @@ def _chat_init(state: ChatState) -> ChatState:
     SystemMessage(content=state["system_prompt"]),
     SystemMessage(content=language_instruction)
   ]
-  
+
   response = llm.invoke(messages)
-  response_text = response.content
+  response_text = extract_json_from_markdown(response.content)
 
   # JSON 형식으로 파싱
   try:
@@ -173,7 +194,7 @@ def _detect_stuck(state: ChatState) -> ChatState:
   ]
 
   response = llm.invoke(messages)
-  response_text = response.content
+  response_text = extract_json_from_markdown(response.content)
 
   try:
     response_data = json.loads(response_text)
@@ -231,7 +252,7 @@ def _chat_eval(state: ChatState) -> ChatState:
   ]
 
   response = llm.invoke(messages)
-  response_text = response.content
+  response_text = extract_json_from_markdown(response.content)
 
   # JSON 형식의 평가 결과 파싱
   try:
@@ -279,7 +300,7 @@ def _chat_advanced(state: ChatState) -> ChatState:
   ]
 
   response = llm.invoke(messages)
-  response_text = response.content
+  response_text = extract_json_from_markdown(response.content)
 
   # JSON 형식의 응답 파싱
   try:
