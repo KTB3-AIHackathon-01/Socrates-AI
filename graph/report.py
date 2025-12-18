@@ -9,7 +9,7 @@ import random
 
 # utils 경로 추가
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from utils.chat_history import save_chat_history, load_chat_history
+# from utils.chat_history import save_chat_history, load_chat_history
 
 load_dotenv()
 
