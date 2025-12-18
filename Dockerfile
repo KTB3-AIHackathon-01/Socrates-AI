@@ -1,0 +1,20 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+RUN apt update && apt install -y curl
+# 의존성 설치
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 애플리케이션 코드 복사
+COPY . .
+
+# SQLite DB 디렉토리 생성
+RUN mkdir -p /app/db
+
+# 포트 노출
+EXPOSE 8000
+
+# 실행
+CMD ["python", "main.py"]

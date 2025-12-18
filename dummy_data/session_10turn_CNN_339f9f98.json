@@ -1,0 +1,65 @@
+{
+  "session_id": "339f9f98-e68b-4563-9522-c4a07d36de68",
+  "topic": "CNN",
+  "created_at": "2025-12-18T14:33:09.198679",
+  "total_turns": 10,
+  "attempt_count": 0,
+  "checkpoints": [
+    "convolution",
+    "filters",
+    "feature maps",
+    "pooling"
+  ],
+  "conversation": [
+    {
+      "turn": 1,
+      "user_input": "CNN이라고 들었는데 뭐하는 건가요?",
+      "ai_response": "CNN은 Convolutional Neural Network로, 이미지 인식 작업에 뛰어난 신경망입니다."
+    },
+    {
+      "turn": 2,
+      "user_input": "이미지를 처리하는 신경망이라는 게 정확히 뭐죠?",
+      "ai_response": "CNN은 필터라는 작은 가중치 집합을 사용해서 이미지의 지역 특징을 추출합니다."
+    },
+    {
+      "turn": 3,
+      "user_input": "필터가 이미지에 어떻게 적용되나요?",
+      "ai_response": "필터가 이미지 위를 움직이면서 합성곱(convolution) 연산을 수행합니다. 각 위치에서 필터와 이미지의 내적을 계산하는 거예요."
+    },
+    {
+      "turn": 4,
+      "user_input": "여러 필터를 동시에 적용할 수 있나요?",
+      "ai_response": "네, 여러 필터를 동시에 적용할 수 있어요. 각 필터는 다른 패턴을 학습하고, 결과적으로 여러 개의 특징 맵이 생성됩니다."
+    },
+    {
+      "turn": 5,
+      "user_input": "그럼 결과물이 특징 맵이라는 건가요?",
+      "ai_response": "정확해요! 필터 연산의 결과들이 모여서 특징 맵이 됩니다. 특징 맵의 각 값은 해당 위치에서의 특징 강도를 나타냅니다."
+    },
+    {
+      "turn": 6,
+      "user_input": "특징 맵을 어떻게 활용하나요?",
+      "ai_response": "특징 맵은 다음 층의 입력으로 사용됩니다. 여러 층을 거치면서 저수준 특징에서 고수준 특징으로 점진적으로 학습돼요."
+    },
+    {
+      "turn": 7,
+      "user_input": "풀링이라는 게 뭐죠?",
+      "ai_response": "풀링(pooling)은 특징 맵의 크기를 줄이는 작업입니다. 계산량을 줄이고 중요한 정보만 유지하는 효과가 있어요."
+    },
+    {
+      "turn": 8,
+      "user_input": "Max pooling과 average pooling은 뭐가 다른가요?",
+      "ai_response": "Max pooling은 영역에서 최댓값을 선택하고, average pooling은 평균값을 계산합니다. Max pooling이 더 많이 사용돼요."
+    },
+    {
+      "turn": 9,
+      "user_input": "완전 연결 층(fully connected layer)은 어디에 쓰나요?",
+      "ai_response": "완전 연결 층은 CNN의 마지막 부분에 위치합니다. 추출된 특징을 기반으로 최종 분류나 예측을 수행해요."
+    },
+    {
+      "turn": 10,
+      "user_input": "CNN 학습은 어떻게 이루어지나요?",
+      "ai_response": "CNN 학습은 역전파(backpropagation)를 통해 이루어집니다. 손실함수의 기울기를 계산해서 필터의 가중치를 업데이트하는 거예요."
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "session_id": "46e63829-8728-4360-90f4-84a7a87bbaf6",
+  "topic": "Git Basics",
+  "created_at": "2025-12-18T14:33:09.200796",
+  "total_turns": 5,
+  "attempt_count": 0,
+  "checkpoints": [
+    "commit",
+    "branch",
+    "merge",
+    "pull request"
+  ],
+  "conversation": [
+    {
+      "turn": 1,
+      "user_input": "버전 관리가 왜 필요한가요?",
+      "ai_response": "코드 변경을 기록하면 나중에 필요할 때 이전 버전으로 돌아갈 수 있어요. 또 누가 뭘 바꿨는지도 알 수 있어요."
+    },
+    {
+      "turn": 2,
+      "user_input": "커밋은 어떻게 하는 건가요?",
+      "ai_response": "git add로 변경 사항을 준비하고, git commit으로 저장해요. 그러면 스냅샷이 만들어진다는 거죠."
+    },
+    {
+      "turn": 3,
+      "user_input": "커밋 메시지는 뭐가 중요한가요?",
+      "ai_response": "좋은 커밋 메시지가 있으면 나중에 왜 이렇게 바꿨는지 쉽게 이해할 수 있어요. 명확하고 짧은 메시지가 좋아요."
+    },
+    {
+      "turn": 4,
+      "user_input": "브랜치(branch)는 뭐죠?",
+      "ai_response": "브랜치는 코드의 여러 버전을 동시에 만들 수 있게 해줘요. 독립적으로 작업했다가 나중에 합칠 수 있어요."
+    },
+    {
+      "turn": 5,
+      "user_input": "여러 브랜치를 합치려면 뭐 해야 하나요?",
+      "ai_response": "merge 명령으로 두 브랜치를 합쳐요. 충돌(conflict)이 나면 어느 것을 선택할지 결정해야 해요."
+    }
+  ]
+}

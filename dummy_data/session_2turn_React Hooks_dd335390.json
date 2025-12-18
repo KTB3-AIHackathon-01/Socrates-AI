@@ -1,0 +1,25 @@
+{
+  "session_id": "dd335390-96f4-4295-bd9a-009a070e3d1a",
+  "topic": "React Hooks",
+  "created_at": "2025-12-18T14:33:09.202125",
+  "total_turns": 2,
+  "attempt_count": 0,
+  "checkpoints": [
+    "useState",
+    "useEffect",
+    "dependencies",
+    "cleanup"
+  ],
+  "conversation": [
+    {
+      "turn": 1,
+      "user_input": "React Hooks가 뭔가요?",
+      "ai_response": "React Hooks는 함수형 컴포넌트에서 state와 다른 React 기능을 쓸 수 있게 해주는 기능이에요."
+    },
+    {
+      "turn": 2,
+      "user_input": "useState는 뭐 하는 건가요?",
+      "ai_response": "useState는 컴포넌트에 상태를 추가해줘요. 상태가 바뀌면 화면이 자동으로 업데이트된다는 장점이 있어요."
+    }
+  ]
+}

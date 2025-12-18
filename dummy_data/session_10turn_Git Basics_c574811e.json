@@ -1,0 +1,65 @@
+{
+  "session_id": "c574811e-b168-44c6-87ab-5f2e5e3a887b",
+  "topic": "Git Basics",
+  "created_at": "2025-12-18T14:33:09.199617",
+  "total_turns": 10,
+  "attempt_count": 0,
+  "checkpoints": [
+    "commit",
+    "branch",
+    "merge",
+    "pull request"
+  ],
+  "conversation": [
+    {
+      "turn": 1,
+      "user_input": "Git의 용도가 뭐예요?",
+      "ai_response": "Git은 프로젝트의 모든 변경 이력을 추적해요. 팀 협업에서 필수적인 도구예요."
+    },
+    {
+      "turn": 2,
+      "user_input": "Git과 GitHub의 차이가 뭐죠?",
+      "ai_response": "Git은 버전 관리 시스템이고, GitHub는 Git을 사용하는 온라인 플랫폼이에요. GitHub에 저장소를 올릴 수 있어요."
+    },
+    {
+      "turn": 3,
+      "user_input": "처음으로 저장소를 만들려면 뭐 해야 하나요?",
+      "ai_response": "git init으로 새 저장소를 만들거나, git clone으로 기존 저장소를 복제해요."
+    },
+    {
+      "turn": 4,
+      "user_input": "변경 사항을 저장하는 단계가 몇 개나 되나요?",
+      "ai_response": "보통 3단계예요. 1) 파일 수정, 2) git add로 준비, 3) git commit으로 저장해요."
+    },
+    {
+      "turn": 5,
+      "user_input": "커밋 메시지를 잘 쓰려면 뭘 신경써야 하나요?",
+      "ai_response": "현재형으로 쓰고, 짧고 명확하게, 왜 바꿨는지를 설명하는 게 좋아요. '완료함' 같은 건 피해야 해요."
+    },
+    {
+      "turn": 6,
+      "user_input": "브랜치를 만드는 이유가 뭐죠?",
+      "ai_response": "새로운 기능을 만들 때 브랜치를 만들면 main 브랜치는 안전하게 유지할 수 있어요."
+    },
+    {
+      "turn": 7,
+      "user_input": "원격 저장소에 코드를 올리려면 뭐 해야 하나요?",
+      "ai_response": "git push 명령으로 원격 저장소에 업로드해요. git push origin main처럼 쓰면 돼요."
+    },
+    {
+      "turn": 8,
+      "user_input": "다른 사람이 한 변경을 받으려면 어떻게 하나요?",
+      "ai_response": "git pull이나 git fetch로 원격의 변경 사항을 가져올 수 있어요. pull은 merge도 함께 해요."
+    },
+    {
+      "turn": 9,
+      "user_input": "두 사람이 같은 파일을 바꾸면 어떻게 되나요?",
+      "ai_response": "이건 충돌(conflict)이 생기는 거예요. 어느 것을 선택할지 직접 결정해야 해요. Git이 표시해줘서 찾기는 쉬워요."
+    },
+    {
+      "turn": 10,
+      "user_input": "Git을 배웠을 때 가장 중요한 개념이 뭐예요?",
+      "ai_response": "커밋 메시지와 브랜칭이 가장 중요해요. 이 두 가지만 잘 해도 협업이 훨씬 수월해져요."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+pydantic==2.12.5
+uvicorn==0.38.0
+websockets==15.0.1
+pathlib==1.0.1
+markdown==3.10
+dotenv==0.9.9
+langgraph==1.0.5
+langchain-openai==1.1.4
+fastapi[websockets]>=0.124.4
+websockets>=13.0
+aiofiles>=23.2.1
+asyncio>=3.4.3
+ollama==0.6.1
+pymongo==4.15.5
