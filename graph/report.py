@@ -41,7 +41,7 @@ def load_sample_data() -> str:
 
   return json_data
 
-async def make_report(user_input: List[str]) -> str:
+async def make_report(user_input: List[str]) -> dict:
   """
   단일 세션의 학습 리포트 생성
 
@@ -50,7 +50,9 @@ async def make_report(user_input: List[str]) -> str:
                 사용자 입력과 AI 응답이 교대로 나오는 배열
 
   Returns:
-    str: 학습 리포트 (JSON 형식)
+    dict: 학습 리포트 (텍스트와 JSON 분리)
+          - report: 학습 여정부터 마무리 메시지까지의 텍스트
+          - data: 구조화된 JSON 데이터
   """
   report_prompt = load_report_prompt()
   user_str = "\n".join(user_input)
@@ -66,11 +68,67 @@ async def make_report(user_input: List[str]) -> str:
     # print("---" * 50)
     # 응답 구조: response.output[0].content[0].text
     if hasattr(response, 'output') and len(response.output) > 0:
-      return response.output[0].content[0].text
-    return ""
-  except (AttributeError, IndexError, json.JSONDecodeError) as e:
+      response_text = response.output[0].content[0].text
+
+      # JSON 부분 추출 (```json 찾기)
+      json_start = response_text.find('```json')
+      json_block_start = -1
+
+      if json_start != -1:
+        # ```json 형식 발견
+        json_block_start = json_start + len('```json')
+        # 첫 번째 줄바꿈 다음부터 시작
+        first_newline = response_text.find('\n', json_block_start)
+        if first_newline != -1:
+          json_block_start = first_newline + 1
+      else:
+        # ```json이 없으면 { 찾기
+        brace_start = response_text.find('{')
+        if brace_start != -1:
+          json_block_start = brace_start
+
+      if json_block_start != -1:
+        # 텍스트 부분: JSON 시작 전까지
+        report_text = response_text[:response_text.find('```json' if response_text.find('```json') != -1 else '{')].strip()
+
+        # JSON 부분 추출
+        if '```json' in response_text:
+          # 마크다운 JSON 블록
+          json_end = response_text.find('```', json_block_start)
+          if json_end == -1:
+            json_end = len(response_text)
+          json_str = response_text[json_block_start:json_end].strip()
+        else:
+          # JSON만 존재하는 경우
+          json_str = response_text[json_block_start:].strip()
+
+        try:
+          # JSON 파싱 시도
+          json_data = json.loads(json_str)
+          return {
+            "report": report_text,
+            "data": json_data
+          }
+        except json.JSONDecodeError as e:
+          print(f"JSON 파싱 실패: {e}")
+          print(f"파싱 시도한 문자열: {json_str[:200]}...")
+          return {
+            "report": report_text,
+            "data": None,
+            "error": f"JSON parsing failed: {str(e)}"
+          }
+
+      # JSON을 찾을 수 없음
+      print(f"경고: JSON 블록을 찾을 수 없습니다. 응답 시작: {response_text[:200]}...")
+      return {
+        "report": response_text,
+        "data": None,
+        "error": "No JSON block found in response"
+      }
+    return {"report": "", "data": None}
+  except (AttributeError, IndexError) as e:
     print(f"응답 파싱 에러: {e}")
-    return ""
+    return {"report": "", "data": None, "error": str(e)}
 
 # ------------ #
 # 하루 리포트 생성
