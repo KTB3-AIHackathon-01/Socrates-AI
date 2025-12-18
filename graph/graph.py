@@ -3,7 +3,7 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_openai import ChatOpenAI
 # import openai
 from typing_extensions import TypedDict
-from typing import Annotated
+from typing import List
 from operator import add
 from dotenv import load_dotenv
 import os, asyncio, sys
@@ -182,10 +182,10 @@ def _detect_stuck(state: ChatState) -> ChatState:
 
       # 남은 기회 정보 추가
       if remaining > 0:
-        state["user_facing_message"] = f"{hint_msg}\n(남은 기회: {remaining}회)"
+        state["user_facing_message"] = f"{hint_msg} (남은 기회: {remaining}회)"
         state["ai_response"] = state["user_facing_message"]
       else:
-        state["user_facing_message"] = f"{hint_msg}\n(마지막 기회입니다)"
+        state["user_facing_message"] = f"{hint_msg} (마지막 기회입니다)"
         state["ai_response"] = state["user_facing_message"]
     else:
       # 정상 답변이면 attempt_count 리셋
@@ -316,7 +316,7 @@ def route_after_detect(state: ChatState) -> str:
   else:
     return "eval"  # 정상이면 advanced 노드로
 
-async def chat_qna(session_id: str, user_input: str, topic: str) -> str:
+async def chat_qna(user_input: List[str]) -> str:
   """
   기존 세션에 새로운 대답을 추가하는 함수
   Flow: detect_stuck → (stuck/eval) → advanced
@@ -347,21 +347,16 @@ async def chat_qna(session_id: str, user_input: str, topic: str) -> str:
 
   result = app.invoke({
     "system_prompt": "",
-    "topic": topic,
+    "topic": user_input[0],
     "brief_reaction": "",
     "next_question": "",
     "user_facing_message": "",
-    # "turn_count": len(chat_history["conversation"]) + 1,
-    # "attempt_count": chat_history.get("attempt_count", 0),
-    # "prev_user_inputs": [c["user_input"] for c in chat_history["conversation"]],
-    # "prev_ai_responses": [c["ai_response"] for c in chat_history["conversation"]],
-    # "checkpoints": chat_history.get("checkpoints", []),
     "turn_count": 0,
     "attempt_count": 0,
-    "prev_user_inputs": [],
-    "prev_ai_responses": [],
+    "prev_user_inputs": [user_input[-3]] if len(user_input) >= 2 else [],
+    "prev_ai_responses": [user_input[-2]] if len(user_input) >= 1 else [],
     "checkpoints": [],
-    "user_input": user_input,
+    "user_input": user_input[-1] if user_input else "",
     "ai_response": "",
     "response_language": "Korean",
     "is_stuck": False,

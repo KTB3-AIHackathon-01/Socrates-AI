@@ -1,5 +1,5 @@
 import os, sys, uvicorn, asyncio
-from typing import Annotated
+from typing import Annotated, List
 from fastapi import FastAPI, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -26,18 +26,13 @@ app.add_middleware(
   allow_methods=["*"],
   allow_headers=["*"],
 )
-class ChatInitModel(BaseModel):
-  session_id: str = Field(..., description="세션 ID")
-  topic: str = Field(..., description="학습할 주제(단어 혹은 문장 형태)")
-class ChatQNAModel(BaseModel):
-  session_id: str = Field(..., description="세션 ID")
-  user_input: str = Field(..., description="사용자 입력(Spring에서 받음)")
-  topic: str = Field(..., description="학습할 주제(단어 혹은 문장 형태)")
+
+class ChatRequest(BaseModel):
+  user_input: List[str] = Field(None, description="사용자 입력(Spring에서 전달, 전체 메시지를 배열로 받음)")
 class ReportModel(BaseModel):
-  session_id: str
+  user_input: List[str] = Field(None, description="사용자 입력(Spring에서 전달, 전체 메시지를 배열로 받음)")
 
 class ChatInitResponse(BaseModel):
-  brief_reaction: str
   user_facing_message: str
   checkpoints: list[str]
 
@@ -46,34 +41,40 @@ class ChatQNAResponse(BaseModel):
   is_stuck: bool
   next_action: str
 
-@app.post("/api/chat_init")
-async def chat_init_api(data: Annotated[ChatInitModel, Body(embed=True)]):
+@app.post("/chat")
+async def chat_api(data: Annotated[ChatRequest, Body(embed=True)]):
   """
-  첫 채팅시 사용하는 엔드포인트\n
-  * 테스트 시에 session_id 는 아무거나 넣어도 동작합니다.
+  채팅시 사용하는 엔드포인트
   """
-  result = await chat_init(data.topic)
-  response = ChatInitResponse(
-    brief_reaction=result.get("brief_reaction", ""),
-    user_facing_message=result.get("user_facing_message", ""),
-    checkpoints=result.get("checkpoints", [])
-  )
-  return JSONResponse(content={"success": True, "data": response.model_dump()})
 
-@app.post("/api/chat_qna")
-async def chat_qna_api(data: ChatQNAModel):
-  result = await chat_qna(data.session_id, data.user_input, data.topic)
-  response = ChatQNAResponse(
-    user_facing_message=result.get("user_facing_message", result.get("ai_response", "")),
-    is_stuck=result.get("is_stuck", False),
-    next_action=result.get("next_action", "continue")
-  )
-  return JSONResponse(content={"success": True, "data": response.model_dump()})
+  is_completed = False
 
-# @app.post("/api/report")
-# async def report_api(data: ReportModel):
-#   report_content = await make_report(data.session_id)
-#   return JSONResponse(content={"success": True, "report": report_content})
+  if len(data.user_input) > 20:
+    is_completed = True
+    return JSONResponse(content={"success": True, "is_completed": is_completed, "data": None})
+  
+  if len(data.user_input) < 2:
+    result = await chat_init(data.user_input[0])
+    response = ChatInitResponse(
+      user_facing_message=f"{result.get("brief_reaction", "")} {result.get("user_facing_message", "")}",
+      checkpoints=result.get("checkpoints", [])
+    )
+    is_completed = False
+  else:
+    result = await chat_qna(data.user_input)
+    response = ChatQNAResponse(
+      user_facing_message=result.get("user_facing_message", ""),
+      is_stuck=result.get("is_stuck", False),
+      next_action=result.get("next_action", "")
+    )
+    is_completed = result.get("is_stuck", False)
+
+  return JSONResponse(content={"success": True, "is_completed": is_completed, "data": response.model_dump()})
+
+@app.post("/chat/report")
+async def report_api(data: Annotated[ChatRequest, Body(embed=True)]):
+  report_content = await make_report(data.user_input)
+  return JSONResponse(content={"success": True, "report": report_content})
 
 @app.get("/health")
 async def health_check():

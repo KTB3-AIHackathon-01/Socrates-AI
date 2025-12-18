@@ -39,28 +39,26 @@ def load_sample_data() -> str:
 
   return json_data
 
-async def make_report(session_id: str) -> str:
+async def make_report(user_input: List[str]) -> str:
   report_prompt = load_report_prompt()
-  # json_data = load_chat_history(session_id)
-  # json_str = json.dumps(json_data)
-  json_str = load_sample_data()
+  user_str = "\n".join(user_input)
 
   messages = [
     {'role': 'system', 'content': report_prompt + "\n모든 응답은 한글로 해주세요"},
-    {'role': 'user', 'content': json_str},
+    {'role': 'user', 'content': user_str},
   ]
 
-  print(messages)
-  print("---" * 50)
   try:
     response = client.responses.create(model="openai.gpt-oss-120b", input=messages)
     print(response)
     print("---" * 50)
-    # return response.content[0].text
+    # 응답 구조: response.output[0].content[0].text
+    if hasattr(response, 'output') and len(response.output) > 0:
+      return response.output[0].content[0].text
     return ""
-  except json.JSONDecodeError:
-    print("error in json")
-    return
+  except (AttributeError, IndexError, json.JSONDecodeError) as e:
+    print(f"응답 파싱 에러: {e}")
+    return ""
 
 # ------------ #
 # 하루 리포트 생성
@@ -95,7 +93,7 @@ async def make_daily_report(session_ids: List[str]) -> str:
   user_daily_prompt = load_daily_prompt()
   # 더미 데이터
   json_data = load_sample_data_for_daily()
-  
+
 
 # 디버그
 if __name__ == "__main__":
