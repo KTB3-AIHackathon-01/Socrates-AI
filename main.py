@@ -38,14 +38,15 @@ async def chat_api(data: Annotated[ChatRequest, Body(embed=True)]):
   if len(data.user_input) > 20:
     is_completed = True
     return JSONResponse(content={"success": True, "is_completed": is_completed, "data": None})
-  
+  else:
+    is_completed = False
+    
   if len(data.user_input) < 2:
     result = await chat_init(data.user_input[0])
     response = ChatInitResponse(
       user_facing_message=f"{result.get("brief_reaction", "")} {result.get("user_facing_message", "")}",
       checkpoints=result.get("checkpoints", [])
     )
-    is_completed = False
   else:
     result = await chat_qna(data.user_input)
     response = ChatQNAResponse(
@@ -53,7 +54,6 @@ async def chat_api(data: Annotated[ChatRequest, Body(embed=True)]):
       is_stuck=result.get("is_stuck", False),
       next_action=result.get("next_action", "")
     )
-    is_completed = result.get("is_stuck", False)
 
   return JSONResponse(content={"success": True, "is_completed": is_completed, "data": response.model_dump()})
 
