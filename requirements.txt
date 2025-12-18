@@ -10,3 +10,4 @@ fastapi[websockets]>=0.124.4
 websockets>=13.0
 aiofiles>=23.2.1
 asyncio>=3.4.3
+ollama==0.6.1

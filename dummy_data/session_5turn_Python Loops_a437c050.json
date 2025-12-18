@@ -1,0 +1,40 @@
+{
+  "session_id": "a437c050-1d19-4a66-a92b-f620b7dbd346",
+  "topic": "Python Loops",
+  "created_at": "2025-12-18T14:33:09.200515",
+  "total_turns": 5,
+  "attempt_count": 0,
+  "checkpoints": [
+    "for loop",
+    "while loop",
+    "iteration",
+    "break/continue"
+  ],
+  "conversation": [
+    {
+      "turn": 1,
+      "user_input": "반복문을 왜 써야 하나요?",
+      "ai_response": "반복문을 쓰면 코드가 짧아지고 읽기도 쉬워져요. 1부터 100까지 더할 때 더 편하죠."
+    },
+    {
+      "turn": 2,
+      "user_input": "for 루프의 기본 구조는 뭔가요?",
+      "ai_response": "for 루프는 'for i in range(5):'처럼 시작해요. i는 계속 변해가면서 각 반복마다 다른 값을 가져요."
+    },
+    {
+      "turn": 3,
+      "user_input": "변수 i는 뭐가 하는 건가요?",
+      "ai_response": "i는 루프 변수예요. 각 반복마다 자동으로 0부터 4까지 변해가면서 루프 안의 코드가 실행돼요."
+    },
+    {
+      "turn": 4,
+      "user_input": "range(5)를 쓰면 어디서부터 어디까지 반복되나요?",
+      "ai_response": "range(5)는 0부터 4까지 5번 반복해요. 마지막 숫자는 포함되지 않는다는 점이 중요해요!"
+    },
+    {
+      "turn": 5,
+      "user_input": "break랑 continue는 뭐가 다른가요?",
+      "ai_response": "break는 루프를 완전히 빠져나가고, continue는 그 턴만 건너뛰고 다음 턴으로 넘어가요."
+    }
+  ]
+}

@@ -214,3 +214,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# 웹소켓 기능 관련 폴더
+_ws
+chat_history
+chat_test
+data
+db
+utils

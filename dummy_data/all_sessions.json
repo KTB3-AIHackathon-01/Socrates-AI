@@ -1,0 +1,77 @@
+{
+  "total_sessions": 12,
+  "sessions": [
+    {
+      "session_id": "339f9f98-e68b-4563-9522-c4a07d36de68",
+      "topic": "CNN",
+      "total_turns": 10,
+      "created_at": "2025-12-18T14:33:09.198679"
+    },
+    {
+      "session_id": "e46c8d22-b283-4a3e-af55-233bb2e9a6d2",
+      "topic": "Python Loops",
+      "total_turns": 10,
+      "created_at": "2025-12-18T14:33:09.199297"
+    },
+    {
+      "session_id": "c574811e-b168-44c6-87ab-5f2e5e3a887b",
+      "topic": "Git Basics",
+      "total_turns": 10,
+      "created_at": "2025-12-18T14:33:09.199617"
+    },
+    {
+      "session_id": "f3fb95a2-8234-4e49-a94f-69da047800b4",
+      "topic": "React Hooks",
+      "total_turns": 10,
+      "created_at": "2025-12-18T14:33:09.199936"
+    },
+    {
+      "session_id": "c9d3d6c5-6c0e-483f-9800-017f734754a2",
+      "topic": "CNN",
+      "total_turns": 5,
+      "created_at": "2025-12-18T14:33:09.200253"
+    },
+    {
+      "session_id": "a437c050-1d19-4a66-a92b-f620b7dbd346",
+      "topic": "Python Loops",
+      "total_turns": 5,
+      "created_at": "2025-12-18T14:33:09.200515"
+    },
+    {
+      "session_id": "46e63829-8728-4360-90f4-84a7a87bbaf6",
+      "topic": "Git Basics",
+      "total_turns": 5,
+      "created_at": "2025-12-18T14:33:09.200796"
+    },
+    {
+      "session_id": "b441fb48-8e92-4ffa-9bd8-b5f1037cb678",
+      "topic": "React Hooks",
+      "total_turns": 5,
+      "created_at": "2025-12-18T14:33:09.201076"
+    },
+    {
+      "session_id": "fcf59fce-68e3-4425-ba5f-4293b78df9bd",
+      "topic": "CNN",
+      "total_turns": 2,
+      "created_at": "2025-12-18T14:33:09.201364"
+    },
+    {
+      "session_id": "680a3ae6-f521-478d-8921-4c9be2c11f20",
+      "topic": "Python Loops",
+      "total_turns": 2,
+      "created_at": "2025-12-18T14:33:09.201622"
+    },
+    {
+      "session_id": "55acdcd2-6868-4071-ad3f-7d27b08867c1",
+      "topic": "Git Basics",
+      "total_turns": 2,
+      "created_at": "2025-12-18T14:33:09.201878"
+    },
+    {
+      "session_id": "dd335390-96f4-4295-bd9a-009a070e3d1a",
+      "topic": "React Hooks",
+      "total_turns": 2,
+      "created_at": "2025-12-18T14:33:09.202125"
+    }
+  ]
+}

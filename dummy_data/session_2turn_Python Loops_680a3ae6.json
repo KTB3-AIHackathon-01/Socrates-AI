@@ -1,0 +1,25 @@
+{
+  "session_id": "680a3ae6-f521-478d-8921-4c9be2c11f20",
+  "topic": "Python Loops",
+  "created_at": "2025-12-18T14:33:09.201622",
+  "total_turns": 2,
+  "attempt_count": 0,
+  "checkpoints": [
+    "for loop",
+    "while loop",
+    "iteration",
+    "break/continue"
+  ],
+  "conversation": [
+    {
+      "turn": 1,
+      "user_input": "반복문이 뭔가요?",
+      "ai_response": "반복문은 같은 코드를 여러 번 실행할 때 사용해요. 손으로 일일이 코드를 여러 번 쓸 필요가 없어집니다."
+    },
+    {
+      "turn": 2,
+      "user_input": "for 루프와 while 루프가 뭐가 다른가요?",
+      "ai_response": "for 루프는 정해진 횟수만큼 반복하고, while 루프는 조건이 참인 동안 계속 반복돼요."
+    }
+  ]
+}

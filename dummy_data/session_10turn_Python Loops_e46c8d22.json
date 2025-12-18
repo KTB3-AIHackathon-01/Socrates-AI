@@ -1,0 +1,65 @@
+{
+  "session_id": "e46c8d22-b283-4a3e-af55-233bb2e9a6d2",
+  "topic": "Python Loops",
+  "created_at": "2025-12-18T14:33:09.199297",
+  "total_turns": 10,
+  "attempt_count": 0,
+  "checkpoints": [
+    "for loop",
+    "while loop",
+    "iteration",
+    "break/continue"
+  ],
+  "conversation": [
+    {
+      "turn": 1,
+      "user_input": "파이썬에서 반복문이란 뭐예요?",
+      "ai_response": "반복문은 같은 작업을 여러 번 반복할 때 사용해요. 프로그래밍에서 가장 중요한 개념 중 하나입니다."
+    },
+    {
+      "turn": 2,
+      "user_input": "반복문을 배워야 하는 이유가 뭐죠?",
+      "ai_response": "반복문을 쓰면 코드가 훨씬 짧고 효율적이 돼요. 1부터 1000까지 더할 때 1000줄을 쓸 필요가 없어지죠."
+    },
+    {
+      "turn": 3,
+      "user_input": "for 루프의 문법을 설명해줄래요?",
+      "ai_response": "for 루프는 'for 변수명 in 리스트:'로 시작해요. 콜론(:)은 꼭 붙여야 하고, 다음 줄은 들여쓰기를 해야 해요."
+    },
+    {
+      "turn": 4,
+      "user_input": "range() 함수가 정확히 뭐하는 건가요?",
+      "ai_response": "range() 함수는 숫자 범위를 생성해요. range(5)는 0, 1, 2, 3, 4를 만들어주고, range(1, 6)은 1부터 5까지 만들어요."
+    },
+    {
+      "turn": 5,
+      "user_input": "루프 안에 루프를 만들 수도 있나요?",
+      "ai_response": "네, 루프 안에 루프를 만들 수 있어요. 이걸 중첩 루프라고 부르는데, 구구단 출력할 때 많이 써요."
+    },
+    {
+      "turn": 6,
+      "user_input": "이중 루프는 언제 써나요?",
+      "ai_response": "이중 루프는 2차원 데이터를 처리할 때 자주 써요. 예를 들어 표의 모든 셀을 확인할 때처럼요."
+    },
+    {
+      "turn": 7,
+      "user_input": "while 루프는 언제 쓰나요?",
+      "ai_response": "while 루프는 조건이 참인 동안 계속 반복해요. 몇 번 반복할지 정하기 어려울 때 유용해요."
+    },
+    {
+      "turn": 8,
+      "user_input": "무한 루프는 어떻게 되는 거죠?",
+      "ai_response": "루프 조건이 항상 참이면 무한 루프가 돼요. 이 경우 프로그램이 멈추지 않으니까 피해야 해요."
+    },
+    {
+      "turn": 9,
+      "user_input": "enumerate() 함수는 뭐 하는 거예요?",
+      "ai_response": "enumerate() 함수는 반복할 때 원소의 인덱스와 값을 동시에 가져올 수 있어요. for i, item in enumerate(list) 이렇게요."
+    },
+    {
+      "turn": 10,
+      "user_input": "반복문을 종료하는 방법들이 뭐가 있나요?",
+      "ai_response": "break는 루프를 완전히 빠져나가고, continue는 그 턴만 건너뛰고, 조건을 False로 만들면 루프가 종료돼요."
+    }
+  ]
+}

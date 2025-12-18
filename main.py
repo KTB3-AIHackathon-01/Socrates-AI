@@ -1,15 +1,14 @@
-import os, sys, uvicorn
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+import os, sys, uvicorn, asyncio
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from ws.manager import manager
-from ws.handlers import handle_start_session, handle_user_response, handle_close_session
-from ws.schemas import ClientMessage
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from typing import Optional
 from uuid import uuid4
-import json
+from graph.graph import chat_init, chat_qna
+from graph.report import make_report
+
 
 # 경로 설정
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -26,61 +25,59 @@ app.add_middleware(
   allow_methods=["*"],
   allow_headers=["*"],
 )
+class ChatInitModel(BaseModel):
+  session_id: str
+  topic: str
+class ChatQNAModel(BaseModel):
+  session_id: str
+  user_input: str
+  topic: str
+class ReportModel(BaseModel):
+  session_id: str
 
-@app.websocket("/ws/chat/{client_id}")
-async def websocket_endpoint(websocket: WebSocket, client_id: str):
-  """
-  WebSocket 채팅 엔드포인트
-  
-  Usage:
-  - 연결: ws://localhost:8000/ws/chat/{client_id}
-  - 세션 시작: {"action": "start", "topic": "Python"}
-  - 답변 제출: {"action": "respond", "session_id": "...", "answer": "..."}
-  - 세션 종료: {"action": "close", "session_id": "..."}
-  """
-  session_id = None
-  
-  try:
-    # 초기 연결 수락
-    await websocket.accept()
-    print(f"🔗 Client {client_id} connected")
+class ChatInitResponse(BaseModel):
+  brief_reaction: str
+  user_facing_message: str
+  checkpoints: list[str]
 
-    while True:
-      # 클라이언트 메시지 수신
-      data = await websocket.receive_text()
-      message = ClientMessage(**json.loads(data))
+class ChatQNAResponse(BaseModel):
+  user_facing_message: str
+  is_stuck: bool
+  next_action: str
 
-      if message.action == "start":
-        # 새 세션 시작
-        session_id = str(uuid4())
-        # 이 부분에서 세션 id를 DB에 저장
-        await manager.connect(session_id, websocket)
-        print(f"🎓 Starting session: {session_id}")
-        await handle_start_session(session_id, message.topic)
-          
-      elif message.action == "respond":
-        # 사용자 응답 처리
-        if message.session_id:
-          session_id = message.session_id
-          await handle_user_response(session_id, message.answer)
-        else:
-          await manager.send_error("", "SESSION_ERROR", "Session ID required")
-              
-      elif message.action == "close":
-        # 세션 종료
-        if message.session_id:
-          await handle_close_session(message.session_id)
-        break
-              
-  except WebSocketDisconnect:
-    print(f"Client {client_id} disconnected")
-    if session_id:
-      await manager.disconnect(session_id)
-          
-  except Exception as e:
-    print(f"Error: {e}")
-    if session_id:
-      await manager.send_error(session_id, "INTERNAL_ERROR", str(e))
+@app.post("/api/chat_init")
+async def chat_init_api(data: ChatInitModel):
+  result = await chat_init(data.topic)
+  response = ChatInitResponse(
+    brief_reaction=result.get("brief_reaction", ""),
+    user_facing_message=result.get("user_facing_message", ""),
+    checkpoints=result.get("checkpoints", [])
+  )
+  return JSONResponse(content={"success": True, "data": response.model_dump()})
+
+@app.post("/api/chat_qna")
+async def chat_qna_api(data: ChatQNAModel):
+  result = await chat_qna(data.session_id, data.user_input, data.topic)
+  response = ChatQNAResponse(
+    user_facing_message=result.get("user_facing_message", result.get("ai_response", "")),
+    is_stuck=result.get("is_stuck", False),
+    next_action=result.get("next_action", "continue")
+  )
+  return JSONResponse(content={"success": True, "data": response.model_dump()})
+
+@app.post("/api/report")
+async def report_api(data: ReportModel):
+  report_content = await make_report(data.session_id)
+  return JSONResponse(content={"success": True, "report": report_content})
+
+@app.get("/health")
+async def health_check():
+  """API 헬스 체크 엔드포인트"""
+  return JSONResponse(content={
+    "status": "healthy",
+    "service": "Socratic Learning API",
+    "version": "1.0.0"
+  })
 
 @app.get("/")
 async def root():

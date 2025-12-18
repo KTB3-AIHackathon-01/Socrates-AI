@@ -1,0 +1,25 @@
+{
+  "session_id": "55acdcd2-6868-4071-ad3f-7d27b08867c1",
+  "topic": "Git Basics",
+  "created_at": "2025-12-18T14:33:09.201878",
+  "total_turns": 2,
+  "attempt_count": 0,
+  "checkpoints": [
+    "commit",
+    "branch",
+    "merge",
+    "pull request"
+  ],
+  "conversation": [
+    {
+      "turn": 1,
+      "user_input": "Git이 뭔가요?",
+      "ai_response": "Git은 코드 변경 이력을 관리해주는 버전 관리 시스템이에요. 여러 명이 협력해서 개발할 때 특히 중요해요."
+    },
+    {
+      "turn": 2,
+      "user_input": "커밋(commit)이라는 게 뭐죠?",
+      "ai_response": "커밋은 코드의 스냅샷을 저장하는 거예요. 마치 게임에서 세이브 포인트를 만드는 것처럼요."
+    }
+  ]
+}
