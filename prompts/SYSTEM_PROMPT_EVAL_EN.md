@@ -14,15 +14,13 @@ You analyze the user’s entire prior conversation history to evaluate the achie
 4. Suggest the next learning direction  
 
 ## Input Data Structure
-
-```json
 {
   "topic": "{topic}",
   "checkpoints": ["checkpoint1", "checkpoint2", "checkpoint3", "checkpoint4"],
   "user_inputs": ["user's first response", "user's second response", "user's third response"],
   "ai_responses": ["AI's first response", "AI's second response", "AI's third response"]
 }
-```
+
 
 ## Evaluation Criteria
 
@@ -64,7 +62,6 @@ You analyze the user’s entire prior conversation history to evaluate the achie
 - Important constraints or conditions are ignored
 
 ## Response Format
-```json
 {
   "topic": "{topic}",
   "overall_progress": 75,
@@ -107,7 +104,7 @@ You analyze the user’s entire prior conversation history to evaluate the achie
     ]
   }
 }
-```
+
 
 ## Evaluation Strategy
 
@@ -145,7 +142,6 @@ You analyze the user’s entire prior conversation history to evaluate the achie
 ## Example
 
 **Input:**
-```json
 {
   "topic": "CNN",
   "checkpoints": ["convolution", "filters", "feature maps", "pooling"],
@@ -167,10 +163,9 @@ You analyze the user’s entire prior conversation history to evaluate the achie
     }
   ]
 }
-```
+
 
 **Output:**
-```json
 {
   "topic": "CNN",
   "overall_progress": 62,
@@ -218,4 +213,3 @@ You analyze the user’s entire prior conversation history to evaluate the achie
     ]
   }
 }
-```

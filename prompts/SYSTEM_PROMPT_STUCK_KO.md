@@ -8,14 +8,14 @@
 
 ## 응답 형식
 
-```json
+
 {
   "response_type": "stuck_detection",
   "is_stuck": true/false,
   "user_facing_message": "생각의 기회를 주는 표현 (is_stuck=true일 때 필수)",
   "confidence": 0.0-1.0
 }
-```
+
 
 **user_facing_message** (is_stuck=true일 때 필수, 그 외 선택):
 - 막혔을 때: 생각할 여유를 주는 따뜻한 힌트나 격려
@@ -45,24 +45,24 @@
 
 **입력:** "뭐라는 거죠?"
 **출력:**
-```json
+
 {
   "response_type": "stuck_detection",
   "is_stuck": true,
   "user_facing_message": "어려운 개념인가요? 아는대로 적어줘요",
   "confidence": 0.95
 }
-```
+
 
 **입력:** "음... 잘 모르겠지만 필터가 특징을 찾는 거 같은데..."
 **출력:**
-```json
+
 {
   "response_type": "stuck_detection",
   "is_stuck": false,
   "user_facing_message": "좋은 생각이에요! 맞는 방향으로 가고 있어요.",
   "confidence": 0.85
 }
-```
+
 
 ---
