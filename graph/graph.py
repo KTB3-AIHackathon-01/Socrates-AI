@@ -1,6 +1,8 @@
 from langgraph.graph import StateGraph, START, END
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_openai import ChatOpenAI
+from langchain_aws import ChatBedrock, ChatBedrockConverse
+import boto3
 # import openai
 from typing_extensions import TypedDict
 from typing import List
@@ -14,11 +16,16 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 # from utils.chat_history import save_chat_history, load_chat_history
 
 load_dotenv()
-# client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-client = ChatOpenAI(
-    model_name="gpt-5-nano",
-    api_key=os.getenv("OPENAI_API_KEY_NANO"),
-    base_url=os.getenv("OPENAI_BASE_URL_NANO")
+
+# Bedrock LLM 클라이언트 설정
+bedrock_client = boto3.client(
+    service_name="bedrock-runtime",
+    region_name=os.getenv("AWS_REGION"),
+    aws_access_key_id=os.getenv("AWS_BEDROCK_ACCESS_KEY_ID"),
+    aws_secret_access_key=os.getenv("AWS_BEDROCK_SECRET_ACCESS_KEY"),
+)
+llm = ChatBedrockConverse(
+    model=os.getenv("AWS_BEDROCK_MODEL_PROFILE_ID"), temperature=1, max_tokens=4000, client=bedrock_client
 )
 
 class ChatState(TypedDict):
@@ -97,8 +104,8 @@ def _chat_init(state: ChatState) -> ChatState:
     SystemMessage(content=state["system_prompt"]),
     SystemMessage(content=language_instruction)
   ]
-
-  response = client.invoke(messages)
+  
+  response = llm.invoke(messages)
   response_text = response.content
 
   # JSON 형식으로 파싱
@@ -165,7 +172,7 @@ def _detect_stuck(state: ChatState) -> ChatState:
     HumanMessage(content=state["user_input"])
   ]
 
-  response = client.invoke(messages)
+  response = llm.invoke(messages)
   response_text = response.content
 
   try:
@@ -223,7 +230,7 @@ def _chat_eval(state: ChatState) -> ChatState:
     HumanMessage(content=json.dumps(eval_data, ensure_ascii=False))
   ]
 
-  response = client.invoke(messages)
+  response = llm.invoke(messages)
   response_text = response.content
 
   # JSON 형식의 평가 결과 파싱
@@ -271,7 +278,7 @@ def _chat_advanced(state: ChatState) -> ChatState:
     HumanMessage(content=json.dumps(advanced_data, ensure_ascii=False))
   ]
 
-  response = client.invoke(messages)
+  response = llm.invoke(messages)
   response_text = response.content
 
   # JSON 형식의 응답 파싱
@@ -372,22 +379,22 @@ async def chat_qna(user_input: List[str]) -> str:
   return result
 
 # # 디버그 메인테스트
-# if __name__ == "__main__":
-#   import sys
-#   import time
-#   topic = sys.argv[1]
-#   user_input = sys.argv[2]
+if __name__ == "__main__":
+  import sys
+  import time
+  topic = sys.argv[1]
+  user_input = sys.argv[1]
   
-#   start_time = time.time()
+  start_time = time.time()
 
-#   # result = asyncio.run(chat_init(topic))
-#   result = asyncio.run(chat_qna("945750df-6fc5-480c-a165-fd1817318249", user_input, topic))
+  # result = asyncio.run(chat_init(topic))
+  result = asyncio.run(chat_qna(user_input.split("|")))
 
-#   print(result)
-#   print("---------"*50)
-#   print("brief_reaction:", result["brief_reaction"])
-#   print("next_question:", result["next_question"])
+  print(result)
+  print("---------"*50)
+  print("brief_reaction:", result["brief_reaction"])
+  print("next_question:", result["next_question"])
 
-#   end_time = time.time()
-#   print(f"processing time : {end_time - start_time:.2f}s")
+  end_time = time.time()
+  print(f"processing time : {end_time - start_time:.2f}s")
 
