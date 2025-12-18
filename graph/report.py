@@ -42,6 +42,16 @@ def load_sample_data() -> str:
   return json_data
 
 async def make_report(user_input: List[str]) -> str:
+  """
+  단일 세션의 학습 리포트 생성
+
+  Args:
+    user_input: 1차원 배열 - [메시지1, 메시지2, ..., 메시지N]
+                사용자 입력과 AI 응답이 교대로 나오는 배열
+
+  Returns:
+    str: 학습 리포트 (JSON 형식)
+  """
   report_prompt = load_report_prompt()
   user_str = "\n".join(user_input)
 
@@ -98,10 +108,30 @@ async def make_daily_report(session_chats: List[List[str]]) -> dict:
   Args:
     session_chats: 2차원 배열 - [[turn1, response1, turn2, response2, ...], [turn1, response1, ...]]
                    각 세션은 사용자 입력과 AI 응답이 교대로 나오는 배열
+                   예: [["질문1", "답변1", "질문2", "답변2"], ["질문3", "답변3"]]
 
   Returns:
     dict: 종합 학습 분석 결과 (JSON)
+          - success 시: learning_summary, concept_mastery, learning_difficulty, learning_behavior, instructional_guidance 포함
+          - error 시: error, raw_response 포함
+
+  Raises:
+    ValueError: 입력이 올바른 2D 배열 형식이 아닌 경우
   """
+  # 입력 검증
+  if not isinstance(session_chats, list):
+    return {"error": f"Invalid input type: expected list, got {type(session_chats).__name__}"}
+
+  if len(session_chats) == 0:
+    return {"error": "No sessions provided in input"}
+
+  # 각 세션이 리스트 형식인지 검증
+  for idx, session in enumerate(session_chats):
+    if not isinstance(session, list):
+      return {"error": f"Session {idx} is not a list: expected list, got {type(session).__name__}"}
+    if len(session) < 2:
+      return {"error": f"Session {idx} has insufficient data: expected at least 2 elements (user_input, ai_response), got {len(session)}"}
+
   user_daily_prompt = load_daily_prompt()
 
   # 입력 데이터를 JSON 형식으로 변환
