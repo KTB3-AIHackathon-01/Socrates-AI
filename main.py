@@ -1,8 +1,9 @@
 import os, sys, uvicorn, asyncio
-from fastapi import FastAPI
+from typing import Annotated
+from fastapi import FastAPI, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 from typing import Optional
 from uuid import uuid4
@@ -26,12 +27,12 @@ app.add_middleware(
   allow_headers=["*"],
 )
 class ChatInitModel(BaseModel):
-  session_id: str
-  topic: str
+  session_id: str = Field(..., description="세션 ID")
+  topic: str = Field(..., description="학습할 주제(단어 혹은 문장 형태)")
 class ChatQNAModel(BaseModel):
-  session_id: str
-  user_input: str
-  topic: str
+  session_id: str = Field(..., description="세션 ID")
+  user_input: str = Field(..., description="사용자 입력(Spring에서 받음)")
+  topic: str = Field(..., description="학습할 주제(단어 혹은 문장 형태)")
 class ReportModel(BaseModel):
   session_id: str
 
@@ -46,7 +47,11 @@ class ChatQNAResponse(BaseModel):
   next_action: str
 
 @app.post("/api/chat_init")
-async def chat_init_api(data: ChatInitModel):
+async def chat_init_api(data: Annotated[ChatInitModel, Body(embed=True)]):
+  """
+  첫 채팅시 사용하는 엔드포인트\n
+  * 테스트 시에 session_id 는 아무거나 넣어도 동작합니다.
+  """
   result = await chat_init(data.topic)
   response = ChatInitResponse(
     brief_reaction=result.get("brief_reaction", ""),
@@ -65,10 +70,10 @@ async def chat_qna_api(data: ChatQNAModel):
   )
   return JSONResponse(content={"success": True, "data": response.model_dump()})
 
-@app.post("/api/report")
-async def report_api(data: ReportModel):
-  report_content = await make_report(data.session_id)
-  return JSONResponse(content={"success": True, "report": report_content})
+# @app.post("/api/report")
+# async def report_api(data: ReportModel):
+#   report_content = await make_report(data.session_id)
+#   return JSONResponse(content={"success": True, "report": report_content})
 
 @app.get("/health")
 async def health_check():

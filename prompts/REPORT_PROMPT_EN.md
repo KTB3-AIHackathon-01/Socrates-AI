@@ -151,7 +151,9 @@ After writing the human-readable report, structure it into the following JSON fo
     "topic": "...",
     "total_turns": 18,
     "final_progress": 0.67,
-    "completion_reason": "...",
+    "understanding": 0.85,
+    "completion_reason_strength": "One-line summary of the learner's key strength (max 100 characters)",
+    "completion_reason_challenge": "One-line summary of the learner's main challenge or area for improvement (max 100 characters)",
     "duration_minutes": 42
   },
   
@@ -232,6 +234,25 @@ After writing the human-readable report, structure it into the following JSON fo
 4. initial_misconception can be null; other fields must not be
 5. Use exact enum values specified in format
 6. **The tone should be conversational and direct—speaking to you, the learner**
+
+**Understanding Calculation:**
+- `understanding` is a decimal value (0.0 to 1.0) representing the learner's comprehension of core concepts
+- **Calculation method:** Count how many checkpoints the learner mentioned/demonstrated in the conversation
+  - Example: If the topic has 4 checkpoints and the learner mentioned/discussed 2 of them, understanding = 0.5
+  - If all 4 checkpoints were discussed, understanding = 1.0
+  - If 3 out of 4 were discussed, understanding = 0.75
+- Always calculate this as: (checkpoints_discussed ÷ total_checkpoints)
+
+**Completion Reason Guidelines:**
+- `completion_reason_strength`: A one-line AI summary of the learner's primary strength observed during learning
+  - Focus on their learning approach, thinking pattern, or breakthrough moment
+  - Example: "You excel at connecting abstract concepts to real-world examples"
+  - Max 100 characters (including spaces)
+
+- `completion_reason_challenge`: A one-line AI summary of the learner's main challenge or area for growth
+  - Be honest but constructive—identify the specific difficulty pattern
+  - Example: "Struggles with terminology but grasps concepts once explained concretely"
+  - Max 100 characters (including spaces)
 
 **Output Format:**
 - DO NOT output JSON alone

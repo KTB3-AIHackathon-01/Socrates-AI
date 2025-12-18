@@ -131,7 +131,9 @@
     "topic": "...",
     "total_turns": 18,
     "final_progress": 0.67,
-    "completion_reason": "...",
+    "understanding": 0.75,
+    "completion_reason_strength": "학습자의 핵심 강점을 한줄로 요약 (최대 100자)",
+    "completion_reason_challenge": "학습자의 주요 어려움이나 개선 영역을 한줄로 요약 (최대 100자)",
     "duration_minutes": 42
   },
   
@@ -211,7 +213,25 @@
 4. null이 허용되는 필드: initial_misconception만
 5. enum 필드는 정확한 값 사용 (예: moment_type, root_cause, importance)
 
-JSON만 출력하지 말고, 먼저 사람이 읽을 수 있는 리포트를 작성한 후, 
+**이해도(understanding) 계산 방법:**
+- `understanding`은 소수점 형태의 값 (0.0~1.0)으로 핵심 개념 이해도를 나타냅니다
+- **계산 방식**: 대화에서 언급된 체크포인트 개수 ÷ 전체 체크포인트 개수
+  - 예: 체크포인트 4개 중 2개를 대화에서 다뤘다면 understanding = 0.5
+  - 체크포인트 4개를 모두 다뤘다면 understanding = 1.0
+  - 체크포인트 4개 중 3개를 다뤘다면 understanding = 0.75
+
+**완료 사유(completion_reason) 작성 가이드:**
+- `completion_reason_strength`: 학습 과정에서 관찰한 학습자의 주요 강점을 한줄로 요약
+  - 학습 접근방식, 사고 패턴, 돌파 순간에 초점
+  - 예: "구체적 예시를 통해 추상 개념을 빠르게 체화하는 능력"
+  - 최대 100자 (공백 포함)
+
+- `completion_reason_challenge`: 학습 과정에서 관찰한 학습자의 주요 어려움을 한줄로 요약
+  - 건설적이면서도 정직하게—구체적 어려움 패턴 파악
+  - 예: "용어 학습에는 시간이 필요하지만, 구체 예시로 설명하면 빠르게 이해"
+  - 최대 100자 (공백 포함)
+
+JSON만 출력하지 말고, 먼저 사람이 읽을 수 있는 리포트를 작성한 후,
 그 내용을 JSON으로 구조화하세요.
 
 ---

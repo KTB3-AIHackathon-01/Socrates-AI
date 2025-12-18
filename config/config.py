@@ -14,3 +14,5 @@ MODEL_NAME = os.getenv("MODEL_NAME", "gpt-5-nano")
 # 학습 시스템 설정
 SYSTEM_PROMPT_PATH = "./prompts/SYSTEM_PROMPT.md"
 REPORT_PROMPT_PATH = "./prompts/REPORT_PROMPT.md"
+
+MONGO_DB = ""

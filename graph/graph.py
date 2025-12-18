@@ -14,9 +14,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 # from utils.chat_history import save_chat_history, load_chat_history
 
 load_dotenv()
-
 # client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-client = ChatOpenAI(model_name="gpt-5-nano", openai_api_key=os.getenv("OPENAI_API_KEY"))
+client = ChatOpenAI(
+    model_name="gpt-5-nano",
+    api_key=os.getenv("OPENAI_API_KEY_NANO"),
+    base_url=os.getenv("OPENAI_BASE_URL_NANO")
+)
 
 class ChatState(TypedDict):
   # 초기 설정
